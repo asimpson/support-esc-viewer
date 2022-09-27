@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+	<html>
+	<head>
+		<title>Notifications</title>
+		<style>
+			body {
+				font-family: sans-serif;
+				max-width: 800px;
+				margin: 0 auto;
+			}
+
+			img {
+				max-width: 100%;
+			}
+
+			pre {
+				overflow: scroll;
+			}
+
+			.card {
+				margin: 2rem 0;
+        padding: 1rem;
+        background: #eee;
+				overflow-wrap: break-word;
+			}
+      
+      .label {
+        padding: 1rem;
+      }
+
+      .mark-all {
+        display: block;
+        margin-bottom: 2rem;
+      }
+		</style>
+	</head>
+	<body>
+		<h1>Notifications</h1>
+    <div class="issue-count">{{ .IssueCount }} issues, checked at {{ .RefreshedTime }}</div>
+    {{range .Notifications}}
+      <div class="card">
+        <h2><a href="{{ .URL }}">{{ .Title }}</a></h2>
+        <div style="display: flex;">
+          {{range .Labels}}
+            <span class="label" style="background-color: #{{ .Color }}">{{ .Name }}</span>
+          {{end}}
+        </div>
+        {{ if not .Closed }}
+          <p>{{ .Body }}</p>
+
+          {{if .Comments}}
+           <h3>Comments</h3>
+         {{end}}
+           {{range .Comments}}
+            <details class="comment">
+             <summary><a href="{{ .URL }}">{{ .Title }}</a> {{ .Date }}</summary>
+             <p>{{ .Body }}</p>
+            </details>
+          {{end}}
+        {{ end }}
+        
+      </div>
+    {{end}}
+    <a class="mark-all" href="/read?time={{ .Time }}">Mark all as read</a>
+		<script>
+			setTimeout(function() {
+				location.reload();
+			}, 600000);
+		</script>
+	</body>
+	</html>
